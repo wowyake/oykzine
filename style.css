@@ -1,0 +1,757 @@
+/*
+Theme Name: OYKZINE
+Theme URI: https://oykzine.example
+Author: OYKZINE
+Description: OYKZINE — 紙のZINEのWeb版テーマ。号(issue) / Notes(note) / 作品(work) の3つの型でコンテンツを管理します。
+Version: 0.7.0
+Text Domain: oykzine
+*/
+
+/* ここは「土台」の最低限のリセットだけ。
+   本格的なデザインは次のステップで部品ごとに作っていきます。 */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+/* =====================================================================
+   トップページ（front-page.php）用スタイル
+   OYKZINE = 高コントラストの黒×白。主役は「流れる表紙」。
+   ===================================================================== */
+
+:root {
+  --oyk-ink: #0a0a0a;
+  --oyk-paper: #ffffff;
+  --oyk-line: #111111;
+  --oyk-muted: #6b6b6b;
+}
+
+body {
+  background: var(--oyk-paper);
+  color: var(--oyk-ink);
+  font-family: "Afacad", "Afacad Flux", "Yu Gothic", YuGothic, "游ゴシック", "Hiragino Kaku Gothic ProN", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* 下部固定ナビの高さぶん余白を確保 */
+  padding-bottom: calc(96px + env(safe-area-inset-bottom));
+}
+
+/* ---- マストヘッド（ロゴ） ---- */
+.oyk-masthead {
+  text-align: center;
+  padding: 28px 20px 18px;
+}
+.oyk-masthead__logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  max-width: 600px;   /* PCでの最大の大きさ。これ以上は大きくならない */
+  margin: 0 auto;     /* PCで上限に達したとき中央に置く */
+}
+.oyk-masthead__logo a,
+.oyk-masthead__logo .custom-logo-link {
+  display: block;
+  width: 100%;
+}
+.oyk-masthead__tagline {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--oyk-muted);
+}
+.oyk-masthead__logo {
+  margin: 6px 0 2px;
+  font-size: clamp(40px, 13vw, 84px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  font-style: italic;
+}
+.oyk-masthead__sub {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.5em;
+  color: var(--oyk-ink);
+}
+
+/* ---- 流れる表紙の帯 ---- */
+.oyk-strip {
+  overflow: hidden;
+  padding: 14px 0 26px;
+  cursor: grab;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.oyk-strip::-webkit-scrollbar { display: none; }
+.oyk-strip:active { cursor: grabbing; }
+.oyk-strip__track {
+  display: flex;
+  gap: 14px;
+  width: max-content;
+  padding: 0 14px;
+}
+.oyk-strip__item {
+  flex: 0 0 auto;
+  width: 150px;
+  aspect-ratio: 3 / 4;
+  background: #e9e9e9;
+  overflow: hidden;
+  text-decoration: none;
+}
+.oyk-strip__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+.oyk-strip__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-weight: 700;
+  color: var(--oyk-muted);
+  padding: 8px;
+  text-align: center;
+}
+
+/* ---- 最新号ヒーロー（全幅） ---- */
+.oyk-hero {
+  position: relative;
+  min-height: 78vh;
+  display: flex;
+  align-items: flex-end;
+  background-color: var(--oyk-ink);
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  overflow: hidden;
+}
+.oyk-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.65) 100%);
+}
+.oyk-hero__inner {
+  position: relative;
+  padding: 0 24px 48px;
+  width: 100%;
+}
+.oyk-hero__label {
+  margin: 0 0 6px;
+  font-size: 12px;
+  letter-spacing: 0.3em;
+}
+.oyk-hero__title {
+  margin: 0 0 18px;
+  font-size: clamp(32px, 9vw, 52px);
+  font-weight: 900;
+  line-height: 1.3;
+  letter-spacing: 0.05em;
+}
+.oyk-hero__lead {
+  margin: 0 0 18px;
+  font-size: 15px;
+  line-height: 1.7;
+  max-width: 32em;
+}
+.oyk-hero__btn {
+  display: block;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.7);
+  color: #fff;
+  text-decoration: none;
+  padding: 14px;
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  transition: background 0.2s, color 0.2s;
+}
+.oyk-hero__btn:hover {
+  background: #fff;
+  color: var(--oyk-ink);
+}
+
+/* ---- NOTES ---- */
+.oyk-notes {
+  margin: 40px 18px;
+  border: 3px solid var(--oyk-line);
+  padding: 22px 18px 26px;
+}
+.oyk-notes__heading {
+  margin: 0 0 18px;
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+.oyk-notes__list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.oyk-note {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 14px;
+  text-decoration: none;
+  color: inherit;
+}
+.oyk-note__thumb {
+  display: block;
+  aspect-ratio: 1 / 1;
+  background: #e9e9e9;
+  overflow: hidden;
+}
+.oyk-note__thumb img { width: 100%; height: 100%; object-fit: cover; }
+.oyk-note__title {
+  display: block;
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+.oyk-note__excerpt {
+  display: block;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--oyk-muted);
+}
+.oyk-notes__more {
+  display: block;
+  text-align: center;
+  margin-top: 24px;
+  border: 1px solid var(--oyk-line);
+  color: inherit;
+  text-decoration: none;
+  padding: 13px;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+}
+.oyk-notes__more:hover { background: var(--oyk-ink); color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  .oyk-strip { overflow-x: auto; }
+}
+
+/* =====================================================================
+   号ページの目次（single-issue.php）と 記事ページ（single-article.php）
+   ===================================================================== */
+
+/* ---- 目次 ---- */
+.oyk-toc {
+  margin: 36px 18px;
+}
+.oyk-toc__heading {
+  margin: 0 0 14px;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+.oyk-toc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: toc;
+}
+.oyk-toc__item {
+  border-top: 1px solid var(--oyk-line);
+}
+.oyk-toc__item:last-child {
+  border-bottom: 1px solid var(--oyk-line);
+}
+.oyk-toc__link {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: baseline;
+  padding: 16px 4px;
+  text-decoration: none;
+  color: inherit;
+}
+.oyk-toc__link::before {
+  counter-increment: toc;
+  content: counter(toc, decimal-leading-zero);
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  color: var(--oyk-muted);
+}
+.oyk-toc__title {
+  display: block;
+  font-weight: 800;
+  font-size: 17px;
+  line-height: 1.4;
+}
+.oyk-toc__sub {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--oyk-muted);
+}
+.oyk-toc__link:hover .oyk-toc__title {
+  text-decoration: underline;
+}
+.oyk-toc__empty {
+  margin: 8px 0;
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--oyk-muted);
+}
+
+.oyk-issue__body {
+  max-width: 680px;
+  margin: 8px auto 48px;
+  padding: 0 20px;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+/* ---- 記事ページ ---- */
+.oyk-article {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 28px 20px 64px;
+}
+.oyk-article__issue {
+  display: inline-block;
+  margin-bottom: 14px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--oyk-muted);
+  text-decoration: none;
+}
+.oyk-article__issue:hover {
+  color: var(--oyk-ink);
+}
+.oyk-article__title {
+  margin: 0 0 24px;
+  font-size: clamp(28px, 7vw, 44px);
+  font-weight: 900;
+  line-height: 1.15;
+}
+.oyk-article__lead {
+  margin: 0 0 28px;
+}
+.oyk-article__body {
+  font-size: 16px;
+  line-height: 1.9;
+}
+.oyk-article__body p {
+  margin: 0 0 1.4em;
+}
+.oyk-article__back {
+  display: inline-block;
+  margin-top: 36px;
+  padding: 12px 18px;
+  border: 1px solid var(--oyk-line);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  color: inherit;
+}
+.oyk-article__back:hover {
+  background: var(--oyk-ink);
+  color: #fff;
+}
+.oyk-article__lead-text {
+  margin: 0 0 22px;
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--oyk-muted);
+}
+
+/* =====================================================================
+   下部固定ナビ（footer.php）と、Search / Menu のパネル
+   ===================================================================== */
+
+.oyk-bottomnav {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  z-index: 50;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: var(--oyk-ink);
+  color: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.22);
+}
+.oyk-bottomnav__btn {
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 9px 0 8px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+.oyk-bottomnav__btn svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+.oyk-bottomnav__btn[aria-expanded="true"] {
+  font-weight: 700;
+}
+
+/* せり上がるパネル（Search / Menu 共通） */
+.oyk-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: var(--oyk-paper);
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform 0.28s ease;
+  visibility: hidden;
+}
+.oyk-panel.is-open {
+  transform: translateY(0);
+  visibility: visible;
+}
+.oyk-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid var(--oyk-line);
+}
+.oyk-panel__title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+}
+.oyk-close {
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--oyk-ink);
+  padding: 4px 8px;
+}
+
+/* Menuパネルの中身（外観>メニューの項目） */
+.oyk-drawer__menu {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+}
+.oyk-drawer__menu li {
+  border-bottom: 1px solid #ececec;
+}
+.oyk-drawer__menu a {
+  display: block;
+  padding: 18px 22px;
+  text-decoration: none;
+  color: inherit;
+  font-size: 18px;
+  font-weight: 700;
+}
+.oyk-drawer__menu a:hover {
+  background: #f5f5f5;
+}
+
+/* Searchパネルの入力欄 */
+.oyk-search__form {
+  padding: 26px 20px;
+}
+.oyk-search__input {
+  width: 100%;
+  font-size: 20px;
+  padding: 12px 0;
+  border: 0;
+  border-bottom: 2px solid var(--oyk-ink);
+  background: none;
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oyk-panel { transition: none; }
+}
+
+/* =====================================================================
+   一覧ページ（archive-issue.php / archive-note.php）
+   ===================================================================== */
+
+.oyk-archive__head {
+  padding: 30px 18px 8px;
+}
+.oyk-archive__title {
+  margin: 0;
+  font-size: clamp(26px, 8vw, 40px);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+.oyk-archive__empty {
+  padding: 24px 18px;
+  color: var(--oyk-muted);
+}
+
+/* 号の表紙グリッド */
+.oyk-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 18px;
+}
+.oyk-grid__item {
+  text-decoration: none;
+  color: inherit;
+}
+.oyk-grid__cover {
+  display: block;
+  aspect-ratio: 3 / 4;
+  background: #e9e9e9;
+  overflow: hidden;
+}
+.oyk-grid__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.oyk-grid__title {
+  display: block;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.oyk-notes__list--page {
+  padding: 18px;
+}
+
+/* ページ送り */
+.pagination,
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  padding: 12px 18px 40px;
+}
+.pagination .page-numbers,
+.nav-links .page-numbers {
+  display: inline-block;
+  padding: 8px 12px;
+  border: 1px solid var(--oyk-line);
+  text-decoration: none;
+  color: inherit;
+  font-size: 13px;
+}
+.pagination .page-numbers.current {
+  background: var(--oyk-ink);
+  color: #fff;
+}
+
+/* 固定リンク段（Menuパネル上部の「今までのOYKZINE」） */
+.oyk-drawer__menu--fixed {
+  padding-bottom: 0;
+}
+
+/* ---- ヒーローのVOL番号（VOL.4 の見せ方） ---- */
+.oyk-hero__vol {
+  margin: 0 0 10px;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  line-height: 1;
+}
+.oyk-hero__vol-label {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-left: 0.3em;   /* ← これを追加。Vの頭をほんの少し右へ */
+}
+.oyk-hero__vol-num {
+  font-size: 34px;
+  font-weight: 900;
+}
+
+/* =====================================================================
+   トップのスクロールスナップ（front-page.php）
+   1画面目（ロゴ＋流れる表紙）と 2画面目（ヒーロー）を全画面＆スナップ。
+   Notes以降は普通のスクロール。
+   ・dvh を使うのでスマホのアドレスバー伸縮でも1画面ちょうどに収まる。
+   ・proximity にしているので、最初の2画面はぐっと吸い付き、Notesから下は
+     自由に読める（mandatoryにすると長いNotesが途中で止められず読みにくい）。
+   ===================================================================== */
+
+html {
+  scroll-snap-type: y proximity;
+  scroll-behavior: smooth;
+}
+
+.oyk-snap__screen {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* 1画面目：ロゴを上・流れる表紙を下、間を大きく開ける（高さ基準なので
+   スマホでもPCでも比率でいい感じに空く） */
+.oyk-firstview {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6vh 0 calc(16px + 80px + 24px + env(safe-area-inset-bottom));
+}
+.oyk-firstview .oyk-masthead {
+  padding: 0 20px;
+}
+.oyk-firstview .oyk-strip {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* 2画面目：ヒーローを全画面に（号ページのヒーローには影響させない） */
+.oyk-hero.oyk-snap__screen {
+  min-height: 100dvh;
+}
+/* 全画面ヒーローの文字が、浮いた下部ナビに隠れないよう下余白を足す */
+.oyk-hero.oyk-snap__screen .oyk-hero__inner {
+  padding-bottom: calc(40px + 60px + env(safe-area-inset-bottom));
+}
+
+/* 動きを減らす設定の人にはスナップ自体を切る */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; scroll-snap-type: none; }
+}
+
+/* =====================================================================
+   記事本文：標準ブロック（Gutenberg）を OYKZINE 仕様に
+   ===================================================================== */
+
+/* ブロックどうしの縦の間隔 */
+.oyk-article__body > * {
+  margin-top: 1.6em;
+  margin-bottom: 1.6em;
+}
+
+/* 全面ブロック（画像など）を画面の端まで断ち落とす */
+.oyk-article__body .alignfull {
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  max-width: 100vw;
+}
+
+/* 見出し */
+.oyk-article__body h2 {
+  font-size: clamp(24px, 6vw, 34px);
+  font-weight: 900;
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  margin-top: 1.8em;
+}
+.oyk-article__body h3 {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  margin-top: 1.6em;
+}
+
+/* 引用 */
+.oyk-article__body .wp-block-quote {
+  margin-left: 0;
+  padding-left: 18px;
+  border-left: 3px solid var(--oyk-ink);
+  font-size: 18px;
+  line-height: 1.7;
+}
+/* プルクオート（大きく見せる一文） */
+.oyk-article__body .wp-block-pullquote {
+  padding: 26px 0;
+  border-top: 2px solid var(--oyk-ink);
+  border-bottom: 2px solid var(--oyk-ink);
+  text-align: center;
+}
+.oyk-article__body .wp-block-pullquote p {
+  margin: 0;
+  font-size: clamp(20px, 5vw, 28px);
+  font-weight: 800;
+  line-height: 1.5;
+}
+.oyk-article__body cite,
+.oyk-article__body .wp-block-quote__citation {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+  font-style: normal;
+  color: var(--oyk-muted);
+}
+
+/* 箇条書き */
+.oyk-article__body ul,
+.oyk-article__body ol {
+  padding-left: 1.4em;
+  line-height: 1.9;
+}
+.oyk-article__body li { margin-bottom: 0.4em; }
+
+/* 画像とキャプション */
+.oyk-article__body figcaption {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--oyk-muted);
+  text-align: center;
+}
+
+/* ギャラリー（複数画像） */
+.oyk-article__body .wp-block-gallery { margin: 1.8em 0; }
+
+/* 区切り線 */
+.oyk-article__body .wp-block-separator {
+  margin: 2.4em auto;
+  border: 0;
+  border-top: 1px solid var(--oyk-line);
+  max-width: 80px;
+}
+
+/* 埋め込み（YouTube / Spotify / Instagram 等） */
+.oyk-article__body .wp-block-embed { margin: 2em 0; }
+
+/* OYKZINE囲み（黒地に白）＝グループブロックのスタイル */
+.oyk-article__body .wp-block-group.is-style-oyk-callout-dark {
+  padding: 28px 22px;
+  background: var(--oyk-ink);
+  color: #fff;
+}
+.oyk-article__body .is-style-oyk-callout-dark a {
+  color: #fff;
+  text-decoration: underline;
+}
