@@ -111,7 +111,7 @@ body {
 .oyk-strip__item {
   flex: 0 0 auto;
   width: 150px;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 210 / 297;
   background: #e9e9e9;
   overflow: hidden;
   text-decoration: none;
@@ -757,4 +757,16 @@ hhtml {
 }
 .oyk-snap .oyk-notes {
   scroll-snap-align: start;
+}
+.oyk-hero__logo {
+  position: absolute;
+  top: 5vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(90%, 600px);   /* スマホは画面いっぱい近く、PCは600pxで頭打ち（TOPと同じ） */
+  height: 22vh;             /* 横幅が大きさを決めるよう、高さは広めに取る */
+  z-index: 1;
+  background-color: var(--logo-color);
+  -webkit-mask: var(--logo-src) no-repeat top center / contain;
+          mask: var(--logo-src) no-repeat top center / contain;
 }

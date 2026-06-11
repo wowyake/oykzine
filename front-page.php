@@ -80,6 +80,14 @@ get_header();
         $oyk_lead = function_exists( 'get_field' ) ? get_field( 'lead_text' ) : '';
         ?>
         <section class="oyk-snap__screen oyk-hero"<?php if ( $oyk_cover_url ) : ?> style="background-image:url('<?php echo esc_url( $oyk_cover_url ); ?>');"<?php endif; ?>>
+<?php
+$oyk_logo_id    = get_theme_mod( 'custom_logo' );
+$oyk_logo_url   = $oyk_logo_id ? wp_get_attachment_image_url( $oyk_logo_id, 'full' ) : '';
+$oyk_logo_color = ( function_exists( 'get_field' ) && get_field( 'hero_logo_color' ) ) ? get_field( 'hero_logo_color' ) : '#ffffff';
+?>
+<?php if ( $oyk_logo_url ) : ?>
+    <span class="oyk-hero__logo" aria-hidden="true" style="--logo-src:url('<?php echo esc_url( $oyk_logo_url ); ?>');--logo-color:<?php echo esc_attr( $oyk_logo_color ); ?>;"></span>
+<?php endif; ?>
             <div class="oyk-hero__inner">
                 <?php if ( $oyk_vol !== '' && $oyk_vol !== null ) : ?>
                     <p class="oyk-hero__vol"><span class="oyk-hero__vol-label">VOL.</span><span class="oyk-hero__vol-num"><?php echo esc_html( $oyk_vol ); ?></span></p>
