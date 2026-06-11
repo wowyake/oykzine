@@ -191,5 +191,44 @@ get_header();
     requestAnimationFrame(tick);
 })();
 </script>
+<script>
+/* 最初の画面で少しでも下にスクロールしたら、最新号(ヒーロー)まで一気に移動する。
+   ヒーロー上端から少し上に戻すと最初の画面へ。Notes以降は普通のスクロール。
+   「動きを減らす」設定の人には何もしない。 */
+(function () {
+    var first = document.querySelector('.oyk-firstview');
+    var hero  = document.querySelector('.oyk-hero.oyk-snap__screen');
+    if (!first || !hero) { return; }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { return; }
+
+    var locked = false;
+    function lock() { locked = true; setTimeout(function () { locked = false; }, 900); }
+    function onFirst() { return window.scrollY < hero.offsetTop - 5; }
+    function nearHeroTop() { return window.scrollY <= hero.offsetTop + 5; }
+    function go(target) {
+        if (locked) { return; }
+        lock();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // マウスホイール / トラックパッド
+    window.addEventListener('wheel', function (e) {
+        if (locked) { return; }
+        if (e.deltaY > 0 && onFirst()) { go(hero); }
+        else if (e.deltaY < 0 && !onFirst() && nearHeroTop()) { go(first); }
+    }, { passive: true });
+
+    // スマホのスワイプ
+    var startY = null;
+    window.addEventListener('touchstart', function (e) { startY = e.touches[0].clientY; }, { passive: true });
+    window.addEventListener('touchmove', function (e) {
+        if (locked || startY === null) { return; }
+        var dy = startY - e.touches[0].clientY; // プラス＝下方向へスワイプ
+        if (Math.abs(dy) < 80) { return; }
+        if (dy > 0 && onFirst()) { go(hero); startY = null; }
+        else if (dy < 0 && !onFirst() && nearHeroTop()) { go(first); startY = null; }
+    }, { passive: true });
+})();
+</script>
 
 <?php get_footer(); ?>

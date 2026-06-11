@@ -611,10 +611,10 @@ body {
      自由に読める（mandatoryにすると長いNotesが途中で止められず読みにくい）。
    ===================================================================== */
 
-html {
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-}
+hhtml {
+    scroll-snap-type: y proximity;
+    scroll-behavior: smooth;
+  }
 
 .oyk-snap__screen {
   scroll-snap-align: start;
