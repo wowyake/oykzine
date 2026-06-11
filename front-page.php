@@ -144,55 +144,50 @@ $oyk_logo_color = ( function_exists( 'get_field' ) && get_field( 'hero_logo_colo
 </div><!-- /.oyk-snap -->
 
 <script>
-/* 流れる表紙：自動で右→左にドリフト。触れると止まる。指/マウスでドラッグ可。
-   「動きを減らす」OS設定の人には自動を止める。
-   ループ用に、トラックの中身が画面幅を超えるまで複製する（号が少なくても流れる）。 */
 (function () {
     var track = document.querySelector('[data-cover-track]');
     if (!track) { return; }
     var strip = track.parentElement;
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // 元の中身を覚えておく
     var original = track.innerHTML;
     if (!original.trim()) { return; }
 
-    // 画面幅の2倍を超えるまで複製を足す（最低でも2セットは並ぶ）
     var guard = 0;
-    while ( track.scrollWidth < strip.clientWidth * 2 && guard < 20 ) {
+    while (track.scrollWidth < strip.clientWidth * 2 && guard < 20) {
         track.innerHTML += original;
         guard++;
     }
-    // ループ用に、さらにもう1セット足して前半＝後半の関係を作る
     track.innerHTML += track.innerHTML;
 
     var pos = 0;
-    var paused = false, isDown = false, startX = 0, startScroll = 0;
+    var speed = 0.6;        // ← 流れる速さ。大きいほど速い（0.4が前の値）
+    var isDown = false, startX = 0, startScroll = 0;
+    var resumeAt = 0;       // この時刻まで停止。時間で必ず再開するので固まらない
+    function hold(ms) { resumeAt = Date.now() + ms; }
 
     strip.addEventListener('pointerdown', function (e) {
-        isDown = true; paused = true;
-        startX = e.pageX; startScroll = strip.scrollLeft;
+        isDown = true; startX = e.pageX; startScroll = strip.scrollLeft;
+        hold(8000);          // 操作中は止めるが、最長8秒で必ず再開
     });
-    window.addEventListener('pointerup', function () {
-        if (!isDown) { return; }
-        isDown = false;
-        setTimeout(function () { paused = false; }, 1500);
-    });
+    function release() { isDown = false; hold(1200); }
+    window.addEventListener('pointerup', release);
+    window.addEventListener('pointercancel', release);   // ← 横取りされた時もここで復帰
     strip.addEventListener('pointermove', function (e) {
         if (!isDown) { return; }
         strip.scrollLeft = startScroll - (e.pageX - startX);
+        pos = strip.scrollLeft;
     });
-    strip.addEventListener('mouseenter', function () { paused = true; });
-    strip.addEventListener('mouseleave', function () { if (!isDown) { paused = false; } });
+    strip.addEventListener('mouseenter', function () { hold(8000); });
+    strip.addEventListener('mouseleave', function () { if (!isDown) { hold(0); } });
 
     function tick() {
         var half = track.scrollWidth / 2;
-        if (!reduce && !paused && half > 0) {
-            pos += 0.4;
+        if (!reduce && half > 0 && Date.now() >= resumeAt) {
+            pos += speed;
             if (pos >= half) { pos -= half; }
             strip.scrollLeft = pos;
         } else {
-            pos = strip.scrollLeft; // ユーザー操作中は位置を同期
+            pos = strip.scrollLeft;
         }
         requestAnimationFrame(tick);
     }
