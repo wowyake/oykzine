@@ -612,7 +612,7 @@ body {
      自由に読める（mandatoryにすると長いNotesが途中で止められず読みにくい）。
    ===================================================================== */
 
-hhtml {
+html {
     scroll-snap-type: y proximity;
     scroll-behavior: smooth;
   }
@@ -629,7 +629,7 @@ hhtml {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 6vh 0 calc(16px + 80px + 24px + env(safe-area-inset-bottom));
+  padding: calc(env(safe-area-inset-top) + 6vh) 0 calc(16px + 80px + 24px + env(safe-area-inset-bottom));
 }
 .oyk-firstview .oyk-masthead {
   padding: 0 20px;
@@ -761,11 +761,11 @@ hhtml {
 }
 .oyk-hero__logo {
   position: absolute;
-  top: 5vh;
+  top: calc(env(safe-area-inset-top) + 3vh);
   left: 50%;
   transform: translateX(-50%);
-  width: min(90%, 600px);   /* スマホは画面いっぱい近く、PCは600pxで頭打ち（TOPと同じ） */
-  height: 22vh;             /* 横幅が大きさを決めるよう、高さは広めに取る */
+  width: min(90%, 600px);
+  height: 22vh;
   z-index: 1;
   background-color: var(--logo-color);
   -webkit-mask: var(--logo-src) no-repeat top center / contain;
