@@ -581,7 +581,7 @@ body {
 }
 .oyk-grid__cover {
   display: block;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 210 / 297;
   background: #e9e9e9;
   overflow: hidden;
 }
@@ -593,6 +593,21 @@ body {
 .oyk-grid__title {
   display: block;
   margin-top: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+.oyk-grid__vol {
+  display: block;
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--oyk-muted);
+}
+.oyk-grid__title {
+  display: block;
+  margin-top: 2px;       /* VOLの直下に来るよう少し詰める */
   font-size: 14px;
   font-weight: 800;
   line-height: 1.4;
@@ -844,10 +859,12 @@ html {
   font-weight: 800;
   line-height: 1.4;
 }
-/* Web appのとき、読むページの上をステータスバーぶん下げる */
-.oyk-article {
-  padding-top: calc(28px + env(safe-area-inset-top));
-}
-.oyk-issue__intro {
-  padding-top: calc(26px + env(safe-area-inset-top));
+/* Web app時、各ページの上にステータスバーぶんの余白（トップの全面ヒーローは除く） */
+.oyk-toc,
+.oyk-issue__intro,
+.oyk-article,
+.oyk-archive__head,
+.oyk-notes__list--page,
+.oyk-panel__head {
+  padding-top: calc(env(safe-area-inset-top) + 22px);
 }

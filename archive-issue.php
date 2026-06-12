@@ -19,12 +19,16 @@ get_header();
 		while ( have_posts() ) :
 			the_post();
 			?>
-			<a class="oyk-grid__item" href="<?php the_permalink(); ?>">
-				<span class="oyk-grid__cover">
-					<?php if ( has_post_thumbnail() ) { the_post_thumbnail( 'large' ); } ?>
-				</span>
-				<span class="oyk-grid__title"><?php the_title(); ?></span>
-			</a>
+<a class="oyk-grid__item" href="<?php the_permalink(); ?>">
+    <span class="oyk-grid__cover">
+        <?php if ( has_post_thumbnail() ) { the_post_thumbnail( 'large' ); } ?>
+    </span>
+    <?php $oyk_vol = function_exists( 'get_field' ) ? get_field( 'vol_number' ) : ''; ?>
+    <?php if ( $oyk_vol !== '' && $oyk_vol !== null ) : ?>
+        <span class="oyk-grid__vol">VOL.<?php echo esc_html( $oyk_vol ); ?></span>
+    <?php endif; ?>
+    <span class="oyk-grid__title"><?php the_title(); ?></span>
+</a>
 			<?php
 		endwhile;
 		?>
