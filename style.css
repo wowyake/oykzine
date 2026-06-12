@@ -257,74 +257,120 @@ body {
    号ページの目次（single-issue.php）と 記事ページ（single-article.php）
    ===================================================================== */
 
-/* ---- 目次 ---- */
+/* ===== 号ページ（目次）===== */
+
+/* 号の導入文（畳んで read more で開く） */
+.oyk-issue__intro {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 26px 22px 0;
+}
+.oyk-issue__intro-body {
+  position: relative;
+  overflow: hidden;
+  max-height: 8.5em;
+  font-size: 14px;
+  line-height: 2.0;
+  color: #2a2a2a;
+}
+.oyk-issue__intro-body::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 3em;
+  background: linear-gradient(180deg, rgba(255,255,255,0), #fff);
+  pointer-events: none;
+}
+.oyk-issue__intro.is-open .oyk-issue__intro-body { max-height: none; }
+.oyk-issue__intro.is-open .oyk-issue__intro-body::after { display: none; }
+.oyk-issue__intro-body p { margin: 0 0 1.2em; }
+.oyk-issue__more {
+  display: block;
+  margin: 12px auto 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--oyk-ink);
+}
+.oyk-issue__more-ico {
+  font-style: normal;
+  display: inline-block;
+  transition: transform 0.2s;
+}
+.oyk-issue__more[aria-expanded="true"] .oyk-issue__more-ico { transform: rotate(180deg); }
+
+/* 目次本体 */
 .oyk-toc {
-  margin: 36px 18px;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 28px 22px 40px;
 }
-.oyk-toc__heading {
-  margin: 0 0 14px;
-  font-size: 24px;
-  font-weight: 900;
-  letter-spacing: 0.04em;
+.oyk-toc__group { margin-bottom: 26px; }
+.oyk-toc__label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.24em;
 }
-.oyk-toc__list {
+.oyk-toc__bar { width: 28px; height: 3px; background: var(--oyk-ink); }
+.oyk-toc__items {
   list-style: none;
   margin: 0;
   padding: 0;
   counter-reset: toc;
 }
-.oyk-toc__item {
-  border-top: 1px solid var(--oyk-line);
-}
-.oyk-toc__item:last-child {
-  border-bottom: 1px solid var(--oyk-line);
-}
+.oyk-toc__item { border-bottom: 1px dotted #c2c2c2; }
 .oyk-toc__link {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 14px;
-  align-items: baseline;
-  padding: 16px 4px;
+  grid-template-columns: 1fr 18px;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 2px;
   text-decoration: none;
   color: inherit;
 }
-.oyk-toc__link::before {
+.oyk-toc__items--num .oyk-toc__link { grid-template-columns: 2.4em 1fr 18px; }
+.oyk-toc__items--num .oyk-toc__link::before {
   counter-increment: toc;
   content: counter(toc, decimal-leading-zero);
+  font-size: 14px;
   font-weight: 800;
-  font-size: 13px;
-  letter-spacing: 0.05em;
-  color: var(--oyk-muted);
+  color: #b3b3b3;
 }
-.oyk-toc__title {
-  display: block;
-  font-weight: 800;
-  font-size: 17px;
-  line-height: 1.4;
+.oyk-toc__title { display: block; font-size: 17px; font-weight: 800; line-height: 1.45; }
+.oyk-toc__sub { display: block; margin-top: 4px; font-size: 12px; line-height: 1.7; color: #8c8c8c; }
+.oyk-toc__badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  border: 1px solid #cfcfcf;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: #8c8c8c;
+  vertical-align: 2px;
 }
-.oyk-toc__sub {
-  display: block;
-  margin-top: 5px;
-  font-size: 12px;
-  line-height: 1.7;
-  color: var(--oyk-muted);
-}
-.oyk-toc__link:hover .oyk-toc__title {
-  text-decoration: underline;
+.oyk-toc__arrow {
+  width: 12px;
+  height: 12px;
+  justify-self: end;
+  border-top: 1.5px solid var(--oyk-ink);
+  border-right: 1.5px solid var(--oyk-ink);
+  transform: rotate(45deg);
 }
 .oyk-toc__empty {
-  margin: 8px 0;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px 22px;
   font-size: 14px;
   line-height: 1.9;
-  color: var(--oyk-muted);
-}
-
-.oyk-issue__body {
-  max-width: 680px;
-  margin: 8px auto 48px;
-  padding: 0 20px;
-  font-size: 16px;
-  line-height: 1.9;
+  color: #8c8c8c;
 }
 
 /* ---- 記事ページ ---- */
@@ -770,4 +816,31 @@ html {
   background-color: var(--logo-color);
   -webkit-mask: var(--logo-src) no-repeat top center / contain;
           mask: var(--logo-src) no-repeat top center / contain;
+}
+.oyk-article__nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 40px;
+  padding-top: 16px;
+  border-top: 1px solid var(--oyk-ink);
+}
+.oyk-article__nav-back,
+.oyk-article__nav-next {
+  text-decoration: none;
+  color: inherit;
+}
+.oyk-article__nav-next { text-align: right; }
+.oyk-article__nav-cap {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--oyk-muted);
+}
+.oyk-article__nav-ttl {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.4;
 }
