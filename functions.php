@@ -149,17 +149,44 @@ add_action( 'init', 'oykzine_register_post_types' );
  *   note と issue の両方に付けられるようにしておく。
  */
 function oykzine_register_taxonomies() {
-	register_taxonomy( 'series', array( 'note', 'issue' ), array(
-		'labels'       => array(
-			'name'          => '連載',
-			'singular_name' => '連載',
-			'add_new_item'  => '連載を追加',
-		),
-		'public'       => true,
-		'hierarchical' => true, // カテゴリ型（親子を持てる）
-		'show_in_rest' => true,
-		'rewrite'      => array( 'slug' => 'series' ),
-	) );
+
+    // 連載名（号をまたぐシリーズ）。記事にも付けられるよう 'article' を追加。
+    register_taxonomy( 'series', array( 'note', 'issue', 'article' ), array(
+        'labels'       => array(
+            'name'          => '連載',
+            'singular_name' => '連載',
+            'add_new_item'  => '連載を追加',
+        ),
+        'public'       => true,
+        'hierarchical' => true,
+        'show_in_rest' => true,
+        'rewrite'      => array( 'slug' => 'series' ),
+    ) );
+
+    // セクション（号の中の枠：THEME / TREND / COLUMN）。記事に付ける。
+    register_taxonomy( 'section', array( 'article' ), array(
+        'labels'       => array(
+            'name'          => 'セクション',
+            'singular_name' => 'セクション',
+            'add_new_item'  => 'セクションを追加',
+        ),
+        'public'       => true,
+        'hierarchical' => true,   // チェックボックスで選べる
+        'show_in_rest' => true,
+        'rewrite'      => array( 'slug' => 'section' ),
+    ) );
+
+    // THEME / TREND / COLUMN を最初から用意する（無ければ作る）。
+    $oyk_sections = array(
+        'theme'  => 'THEME',
+        'trend'  => 'TREND',
+        'column' => 'COLUMN',
+    );
+    foreach ( $oyk_sections as $oyk_slug => $oyk_name ) {
+        if ( ! term_exists( $oyk_slug, 'section' ) ) {
+            wp_insert_term( $oyk_name, 'section', array( 'slug' => $oyk_slug ) );
+        }
+    }
 }
 add_action( 'init', 'oykzine_register_taxonomies' );
 
