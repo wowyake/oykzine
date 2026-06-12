@@ -864,7 +864,6 @@ html {
 .oyk-issue__intro,
 .oyk-article,
 .oyk-archive__head,
-.oyk-notes__list--page,
 .oyk-panel__head {
   padding-top: calc(env(safe-area-inset-top) + 22px);
 }
