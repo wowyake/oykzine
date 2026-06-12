@@ -844,3 +844,10 @@ html {
   font-weight: 800;
   line-height: 1.4;
 }
+/* Web appのとき、読むページの上をステータスバーぶん下げる */
+.oyk-article {
+  padding-top: calc(28px + env(safe-area-inset-top));
+}
+.oyk-issue__intro {
+  padding-top: calc(26px + env(safe-area-inset-top));
+}
