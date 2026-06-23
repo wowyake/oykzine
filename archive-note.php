@@ -18,15 +18,23 @@ get_header();
 		while ( have_posts() ) :
 			the_post();
 			?>
-			<a class="oyk-note" href="<?php the_permalink(); ?>">
-				<span class="oyk-note__thumb">
-					<?php if ( has_post_thumbnail() ) { the_post_thumbnail( 'medium' ); } ?>
-				</span>
-				<span class="oyk-note__body">
-					<span class="oyk-note__title"><?php the_title(); ?></span>
-					<span class="oyk-note__excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 38 ) ); ?></span>
-				</span>
-			</a>
+<a class="oyk-note" href="<?php the_permalink(); ?>">
+    <span class="oyk-note__thumb">
+        <?php if ( has_post_thumbnail() ) { the_post_thumbnail( 'large' ); } ?>
+    </span>
+    <span class="oyk-note__body">
+        <?php
+        $oyk_note_series = get_the_terms( get_the_ID(), 'series' );
+        $oyk_note_label  = ( $oyk_note_series && ! is_wp_error( $oyk_note_series ) ) ? $oyk_note_series[0]->name : 'NOTE';
+        ?>
+        <span class="oyk-note__cat"><?php echo esc_html( $oyk_note_label ); ?></span>
+        <span class="oyk-note__title"><?php the_title(); ?></span>
+        <?php if ( has_excerpt() ) : ?>
+            <span class="oyk-note__excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 40 ) ); ?></span>
+        <?php endif; ?>
+        <span class="oyk-note__date"><?php echo esc_html( get_the_date() ); ?></span>
+    </span>
+</a>
 			<?php
 		endwhile;
 		?>

@@ -150,7 +150,7 @@ add_action( 'init', 'oykzine_register_post_types' );
  */
 function oykzine_register_taxonomies() {
 
-    // 連載名（号をまたぐシリーズ）。記事にも付けられるよう 'article' を追加。
+    // 連載（号をまたぐシリーズ）。あとから連載としてまとめるためのカテゴリ分け。
     register_taxonomy( 'series', array( 'note', 'issue', 'article' ), array(
         'labels'       => array(
             'name'          => '連載',
@@ -171,9 +171,22 @@ function oykzine_register_taxonomies() {
             'add_new_item'  => 'セクションを追加',
         ),
         'public'       => true,
-        'hierarchical' => true,   // チェックボックスで選べる
+        'hierarchical' => true,
         'show_in_rest' => true,
         'rewrite'      => array( 'slug' => 'section' ),
+    ) );
+
+    // タグ（#フード などの自由なテーマタグ）。連載とは別物。
+    register_taxonomy( 'topic', array( 'note', 'article' ), array(
+        'labels'       => array(
+            'name'          => 'タグ',
+            'singular_name' => 'タグ',
+            'add_new_item'  => 'タグを追加',
+        ),
+        'public'       => true,
+        'hierarchical' => false,   // タグ式（自由に入力できる）
+        'show_in_rest' => true,
+        'rewrite'      => array( 'slug' => 'topic' ),
     ) );
 
     // THEME / TREND / COLUMN を最初から用意する（無ければ作る）。
