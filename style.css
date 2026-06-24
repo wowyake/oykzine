@@ -997,3 +997,22 @@ html {
 }
 .oyk-chip.is-on { border-color: var(--oyk-ink); background: var(--oyk-ink); color: #fff; }
 .oyk-filter__empty { padding: 8px 18px 24px; color: var(--oyk-muted); }
+.oyk-credit a { color: var(--oyk-ink); text-decoration: underline; }
+.oyk-fhead { padding: calc(env(safe-area-inset-top) + 22px) 18px 6px; }
+.oyk-fhead__title { margin: 6px 0 0; font-size: 22px; font-weight: 900; letter-spacing: 0.04em; }
+.oyk-chips__label { font-size: 11px; font-weight: 800; letter-spacing: 0.16em; color: var(--oyk-muted); align-self: center; }
+.oyk-filter__count { padding: 0 18px 8px; font-size: 12px; color: var(--oyk-muted); }
+.oyk-search__tags { margin-top: 22px; }
+.oyk-search__tags .oyk-chips { padding: 8px 0 0; }
+.oyk-search__go {
+  margin-top: 22px;
+  width: 100%;
+  background: var(--oyk-ink);
+  color: #fff;
+  border: 0;
+  padding: 14px;
+  font: inherit;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+}

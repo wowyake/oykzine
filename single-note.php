@@ -17,7 +17,9 @@ while ( have_posts() ) :
     $oyk_c_photo = function_exists( 'get_field' ) ? get_field( 'credit_photo' ) : '';
     $oyk_c_text  = function_exists( 'get_field' ) ? get_field( 'credit_text' )  : '';
     $oyk_c_edit  = function_exists( 'get_field' ) ? get_field( 'credit_edit' )  : '';
-    $oyk_has_credit = ( $oyk_c_photo || $oyk_c_text || $oyk_c_edit );
+    $oyk_writers = get_the_terms( get_the_ID(), 'writer' );
+    $oyk_writers = ( $oyk_writers && ! is_wp_error( $oyk_writers ) ) ? $oyk_writers : array();
+    $oyk_has_credit = ( $oyk_c_photo || $oyk_c_text || $oyk_c_edit || $oyk_writers );
     ?>
 
     <article class="oyk-article">
@@ -41,10 +43,20 @@ while ( have_posts() ) :
 
             <div class="oyk-arthead__meta">
                 <?php if ( $oyk_has_credit ) : ?>
-                    <div class="oyk-credit">
+            <div class="oyk-credit">
                         <span class="oyk-credit__label">CREDIT</span>
                         <?php if ( $oyk_c_photo ) : ?><span>写真・<?php echo esc_html( $oyk_c_photo ); ?></span><?php endif; ?>
-                        <?php if ( $oyk_c_text ) : ?><span>文・<?php echo esc_html( $oyk_c_text ); ?></span><?php endif; ?>
+                        <?php if ( $oyk_writers ) : ?>
+                            <span>文・<?php
+                                $oyk_wl = array();
+                                foreach ( $oyk_writers as $w ) {
+                                    $oyk_wl[] = '<a href="' . esc_url( get_term_link( $w ) ) . '">' . esc_html( $w->name ) . '</a>';
+                                }
+                                echo implode( '、', $oyk_wl );
+                            ?></span>
+                        <?php elseif ( $oyk_c_text ) : ?>
+                            <span>文・<?php echo esc_html( $oyk_c_text ); ?></span>
+                        <?php endif; ?>
                         <?php if ( $oyk_c_edit ) : ?><span>編集・<?php echo esc_html( $oyk_c_edit ); ?></span><?php endif; ?>
                     </div>
                 <?php else : ?>

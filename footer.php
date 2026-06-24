@@ -28,15 +28,29 @@
 </nav>
 
 <div class="oyk-panel oyk-search" id="oyk-search" aria-hidden="true">
-	<div class="oyk-panel__head">
-		<p class="oyk-panel__title">Search</p>
-		<button class="oyk-close" type="button" data-oyk-close aria-label="閉じる">&times;</button>
-	</div>
-	<form class="oyk-search__form" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-		<input class="oyk-search__input" type="search" name="s" placeholder="記事・号・Notesを検索" />
-	</form>
+    <div class="oyk-panel__head">
+        <p class="oyk-panel__title">Search</p>
+        <button class="oyk-close" type="button" data-oyk-close aria-label="閉じる">&times;</button>
+    </div>
+    <form class="oyk-search__form" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>" data-search-form>
+        <input class="oyk-search__input" type="search" name="s" placeholder="記事・号・Notesを検索" />
+        <input type="hidden" name="tag" value="" data-tag-field />
+        <?php
+        $oyk_panel_topics = get_terms( array( 'taxonomy' => 'topic', 'hide_empty' => true ) );
+        if ( $oyk_panel_topics && ! is_wp_error( $oyk_panel_topics ) ) :
+            ?>
+            <div class="oyk-search__tags">
+                <span class="oyk-chips__label">タグで探す</span>
+                <div class="oyk-chips">
+                    <?php foreach ( $oyk_panel_topics as $oyk_pt ) : ?>
+                        <button type="button" class="oyk-chip" data-panel-chip="<?php echo esc_attr( $oyk_pt->slug ); ?>">#<?php echo esc_html( $oyk_pt->name ); ?></button>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <button type="submit" class="oyk-search__go">検索する</button>
+        <?php endif; ?>
+    </form>
 </div>
-
 <div class="oyk-panel oyk-drawer" id="oyk-drawer" aria-hidden="true">
 	<div class="oyk-panel__head">
 		<p class="oyk-panel__title">Menu</p>
@@ -97,7 +111,23 @@
 			}
 		});
 	});
-
+// Searchパネルのタグチップ：選んだタグを hidden の tag に入れて送信
+    (function () {
+        var form = document.querySelector('[data-search-form]');
+        if (!form) { return; }
+        var field = form.querySelector('[data-tag-field]');
+        var chips = form.querySelectorAll('[data-panel-chip]');
+        var picked = [];
+        chips.forEach(function (b) {
+            b.addEventListener('click', function () {
+                var s = b.getAttribute('data-panel-chip');
+                var i = picked.indexOf(s);
+                if (i === -1) { picked.push(s); b.classList.add('is-on'); }
+                else { picked.splice(i, 1); b.classList.remove('is-on'); }
+                field.value = picked.join(',');
+            });
+        });
+    })();
 	document.querySelectorAll('[data-oyk-close]').forEach(function (b) {
 		b.addEventListener('click', closeAll);
 	});
