@@ -974,3 +974,26 @@ html {
   display: block;
 }
 .oyk-arthead__hero img { width: 100%; height: auto; display: block; }
+/* ===== ターム一覧の絞り込みバー ===== */
+.oyk-arch__kicker {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 11px; font-weight: 800; letter-spacing: 0.24em;
+  margin-bottom: 6px;
+}
+.oyk-filter { display: flex; gap: 10px; padding: 0 18px 8px; flex-wrap: wrap; }
+.oyk-filter__kw {
+  flex: 1; min-width: 0;
+  border: 1px solid var(--oyk-ink); background: none;
+  padding: 10px 12px; font: inherit; font-size: 14px;
+}
+.oyk-filter__sort {
+  border: 1px solid var(--oyk-ink); background: #fff;
+  padding: 10px 12px; font: inherit; font-size: 13px;
+}
+.oyk-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 18px 14px; }
+.oyk-chip {
+  font-size: 11px; border: 1px solid #cfcfcf; background: none; cursor: pointer;
+  padding: 5px 10px; color: #6b6b6b; font-family: inherit;
+}
+.oyk-chip.is-on { border-color: var(--oyk-ink); background: var(--oyk-ink); color: #fff; }
+.oyk-filter__empty { padding: 8px 18px 24px; color: var(--oyk-muted); }

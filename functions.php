@@ -150,51 +150,36 @@ add_action( 'init', 'oykzine_register_post_types' );
  */
 function oykzine_register_taxonomies() {
 
-    // 連載（号をまたぐシリーズ）。あとから連載としてまとめるためのカテゴリ分け。
+    // 連載（号をまたぐシリーズ）。あとから連載としてまとめるカテゴリ分け。
     register_taxonomy( 'series', array( 'note', 'issue', 'article' ), array(
-        'labels'       => array(
-            'name'          => '連載',
-            'singular_name' => '連載',
-            'add_new_item'  => '連載を追加',
-        ),
-        'public'       => true,
-        'hierarchical' => true,
-        'show_in_rest' => true,
+        'labels'       => array( 'name' => '連載', 'singular_name' => '連載', 'add_new_item' => '連載を追加' ),
+        'public'       => true, 'hierarchical' => true, 'show_in_rest' => true,
         'rewrite'      => array( 'slug' => 'series' ),
     ) );
 
-    // セクション（号の中の枠：THEME / TREND / COLUMN）。記事に付ける。
+    // セクション（号の中の枠：THEME / TREND / COLUMN）。
     register_taxonomy( 'section', array( 'article' ), array(
-        'labels'       => array(
-            'name'          => 'セクション',
-            'singular_name' => 'セクション',
-            'add_new_item'  => 'セクションを追加',
-        ),
-        'public'       => true,
-        'hierarchical' => true,
-        'show_in_rest' => true,
+        'labels'       => array( 'name' => 'セクション', 'singular_name' => 'セクション', 'add_new_item' => 'セクションを追加' ),
+        'public'       => true, 'hierarchical' => true, 'show_in_rest' => true,
         'rewrite'      => array( 'slug' => 'section' ),
     ) );
 
-    // タグ（#フード などの自由なテーマタグ）。連載とは別物。
+    // タグ（#フード などの自由なテーマタグ）。
     register_taxonomy( 'topic', array( 'note', 'article' ), array(
-        'labels'       => array(
-            'name'          => 'タグ',
-            'singular_name' => 'タグ',
-            'add_new_item'  => 'タグを追加',
-        ),
-        'public'       => true,
-        'hierarchical' => false,   // タグ式（自由に入力できる）
-        'show_in_rest' => true,
+        'labels'       => array( 'name' => 'タグ', 'singular_name' => 'タグ', 'add_new_item' => 'タグを追加' ),
+        'public'       => true, 'hierarchical' => false, 'show_in_rest' => true,
         'rewrite'      => array( 'slug' => 'topic' ),
     ) );
 
+    // 著者（寄稿者）。著者ページ＆並び替え用。'author'は予約語なので 'writer' で登録。
+    register_taxonomy( 'writer', array( 'note', 'article' ), array(
+        'labels'       => array( 'name' => '著者', 'singular_name' => '著者', 'add_new_item' => '著者を追加' ),
+        'public'       => true, 'hierarchical' => true, 'show_in_rest' => true,
+        'rewrite'      => array( 'slug' => 'writer' ),
+    ) );
+
     // THEME / TREND / COLUMN を最初から用意する（無ければ作る）。
-    $oyk_sections = array(
-        'theme'  => 'THEME',
-        'trend'  => 'TREND',
-        'column' => 'COLUMN',
-    );
+    $oyk_sections = array( 'theme' => 'THEME', 'trend' => 'TREND', 'column' => 'COLUMN' );
     foreach ( $oyk_sections as $oyk_slug => $oyk_name ) {
         if ( ! term_exists( $oyk_slug, 'section' ) ) {
             wp_insert_term( $oyk_name, 'section', array( 'slug' => $oyk_slug ) );
